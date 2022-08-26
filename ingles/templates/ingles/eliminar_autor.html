@@ -1,0 +1,14 @@
+{% extends 'index.html' %}
+
+{% block titulo %}
+Eliminacion de estudiantes
+{% endblock titulo %}
+
+{% block body %}
+    <form method="POST">
+        {% csrf_token %}
+        <h2>¿Deseas Eliminar el Registro {{estudiante.nombre}}?</h2>
+        <button type="submit">Eliminar</button>
+        <a href="{% url 'ingles:listar_estudiante' %}">Cancelar </a>
+    </form>
+{% endblock body %}
