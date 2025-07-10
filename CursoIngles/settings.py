@@ -25,7 +25,6 @@ if RENDER_EXTERNAL_HOSTNAME:
 # ==============================================================================
 # 🧩 APLICACIONES
 # ==============================================================================
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -37,10 +36,8 @@ INSTALLED_APPS = [
     'usuario',
     'import_export',
     'crispy_forms',
-    'django-crispy-forms',
-    'crispy_bootstrap4',
+    'crispy_bootstrap4', # CORRECTO
     'rest_framework',
-    # 'crispy_bootstrap4', # Crispy forms v2+ recomienda este nombre
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
