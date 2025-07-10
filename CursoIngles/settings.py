@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'usuario',
     'import_export',
     'crispy_forms',
+    'crispy_bootstrap4',
     'rest_framework',
     # 'crispy_bootstrap4', # Crispy forms v2+ recomienda este nombre
 ]
