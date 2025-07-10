@@ -27,3 +27,5 @@ sympy==1.13.3
 tabulate==0.9.0
 tzdata==2024.1
 whitenoise
+django-crispy-forms
+crispy-bootstrap4
