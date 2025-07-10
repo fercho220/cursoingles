@@ -2,9 +2,8 @@ import os
 from pathlib import Path
 import dj_database_url
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+# Ruta base del proyecto
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # ==============================================================================
 # 🔐 CONFIGURACIÓN DE SEGURIDAD
@@ -12,10 +11,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-fallback-key-for-dev')
 
-# DEBUG se leerá desde las variables de entorno de Render. En local será False por defecto.
+# DEBUG se lee desde las variables de entorno. Es 'False' en producción.
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
-# Configuración de hosts permitidos para Render
+# Hosts permitidos, configurado para Render
 ALLOWED_HOSTS = []
 RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
 if RENDER_EXTERNAL_HOSTNAME:
@@ -23,24 +22,27 @@ if RENDER_EXTERNAL_HOSTNAME:
 
 
 # ==============================================================================
-# 🧩 APLICACIONES
+# 🧩 APLICACIONES INSTALADAS
 # ==============================================================================
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'whitenoise.runserver_nostatic', # Necesario para WhiteNoise
     'django.contrib.staticfiles',
     'ingles',
     'usuario',
     'import_export',
     'crispy_forms',
-    'crispy_bootstrap4', # CORRECTO
+    'crispy_bootstrap4',
     'rest_framework',
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
 
 
 # ==============================================================================
@@ -49,8 +51,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    # --- AÑADIDO: WhiteNoise para servir archivos estáticos ---
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware', # Debe estar aquí, segundo en la lista
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -84,9 +85,9 @@ WSGI_APPLICATION = 'CursoIngles.wsgi.application'
 # 🛢️ BASE DE DATOS
 # ==============================================================================
 
-# --- CORREGIDO: Forma estándar y robusta para leer la DATABASE_URL ---
 DATABASES = {
     'default': dj_database_url.config(
+        # Fallback a una base de datos local si no está en Render
         default='sqlite:///db.sqlite3',
         conn_max_age=600
     )
@@ -98,10 +99,10 @@ DATABASES = {
 # ==============================================================================
 
 AUTH_PASSWORD_VALIDATORS = [
-    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',},
-    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',},
-    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',},
-    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',},
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
 
@@ -116,16 +117,19 @@ USE_TZ = True
 
 
 # ==============================================================================
-# 🗂️ ARCHIVOS ESTÁTICOS Y DE MEDIOS
+# 🗂️ ARCHIVOS ESTÁTICOS Y DE MEDIOS (Configuración final para Render)
 # ==============================================================================
 
 STATIC_URL = '/static/'
+MEDIA_URL = '/media/'
+
+# Directorio donde `collectstatic` copiará todos los archivos para producción
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-# --- AÑADIDO: Almacenamiento de estáticos para WhiteNoise ---
-STATICFILES_STORAGE = 'whitenoise.storage.StaticFilesStorage'
+# Solo en producción (`DEBUG=False`), usa el almacenamiento de WhiteNoise.
+if not DEBUG:
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
