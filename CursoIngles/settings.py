@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-import dj_database_url  # <--- Agregado
+import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -10,7 +10,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'dev-secret-key')
 
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = ['*']  # Puedes luego cambiar a [os.environ.get('RENDER_EXTERNAL_HOSTNAME', 'localhost')]
+ALLOWED_HOSTS = [os.environ.get('RENDER_EXTERNAL_HOSTNAME', 'localhost')]
 
 # ------------------------ 🧩 APPS ------------------------
 
